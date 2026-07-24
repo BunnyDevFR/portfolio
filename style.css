@@ -1,4 +1,3 @@
-/* ====== RESET & BASE ====== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -52,7 +51,7 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 button { border: none; background: none; font-family: inherit; }
 
-/* ====== GLOBAL BACKGROUND LAYERS ====== */
+/* backgrounds */
 .bg-layers {
   position: fixed;
   inset: 0;
@@ -61,7 +60,6 @@ button { border: none; background: none; font-family: inherit; }
   overflow: hidden;
 }
 
-/* Aurora canvas */
 .bg-aurora {
   position: absolute;
   inset: 0;
@@ -69,7 +67,6 @@ button { border: none; background: none; font-family: inherit; }
   height: 100%;
 }
 
-/* Floating depth orbs */
 .bg-depth-container {
   position: absolute;
   inset: 0;
@@ -148,7 +145,7 @@ button { border: none; background: none; font-family: inherit; }
   50% { top: 42%; left: 62%; }
 }
 
-/* Noise texture overlay */
+/* noise overlay thing */
 .bg-noise {
   position: absolute;
   inset: 0;
@@ -160,9 +157,7 @@ button { border: none; background: none; font-family: inherit; }
   mix-blend-mode: soft-light;
 }
 
-
-
-/* ====== LOADING SCREEN ====== */
+/* loading screen */
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -272,7 +267,7 @@ button { border: none; background: none; font-family: inherit; }
   border-color: var(--accent);
 }
 
-/* ====== SCROLL PROGRESS ====== */
+/* scroll progress */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -284,7 +279,7 @@ button { border: none; background: none; font-family: inherit; }
   transition: width 0.1s linear;
 }
 
-/* ====== NAVBAR ====== */
+/* navbar */
 .navbar {
   position: fixed;
   top: 20px;
@@ -415,7 +410,7 @@ button { border: none; background: none; font-family: inherit; }
 .mobile-toggle.active span:nth-child(2) { opacity: 0; }
 .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-/* ====== HERO ====== */
+/* hero */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -697,7 +692,7 @@ button { border: none; background: none; font-family: inherit; }
   50% { transform: scaleY(0.5); opacity: 0.5; }
 }
 
-/* ====== SECTIONS ====== */
+/* sections global */
 section {
   padding: 120px 24px;
   position: relative;
@@ -740,7 +735,7 @@ section {
   line-height: 1.6;
 }
 
-/* ====== ABOUT ====== */
+/* about section */
 .about {
   background: var(--bg-secondary);
 }
@@ -854,6 +849,7 @@ section {
   font-weight: 500;
 }
 
+/* timeline */
 .timeline {
   max-width: 700px;
   margin: 0 auto;
@@ -926,7 +922,7 @@ section {
   color: var(--text-secondary);
 }
 
-/* ====== SKILLS ====== */
+/* skills section */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -998,7 +994,7 @@ section {
   color: var(--text-secondary);
 }
 
-/* ====== PROJECTS ====== */
+/* projects */
 .projects {
   background: var(--bg-secondary);
 }
@@ -1182,7 +1178,7 @@ section {
   letter-spacing: 0.5px;
 }
 
-/* Gallery */
+/* project gallery */
 .gallery-header {
   display: flex;
   align-items: center;
@@ -1281,8 +1277,6 @@ section {
   transition: var(--transition);
 }
 
-
-
 .gallery-item:hover {
   border-color: var(--border-light);
   transform: translateY(-3px);
@@ -1312,12 +1306,11 @@ section {
   color: var(--text-muted);
 }
 
-/* Gallery filter animations */
 .gallery-item.hidden {
   display: none;
 }
 
-/* ====== CONTACT ====== */
+/* contact */
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -1382,6 +1375,7 @@ section {
   margin-top: 16px;
 }
 
+/* form */
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -1444,7 +1438,7 @@ section {
   color: transparent;
 }
 
-/* ====== FOOTER ====== */
+/* footer */
 .footer {
   padding: 60px 24px 40px;
   border-top: 1px solid var(--border);
@@ -1523,7 +1517,7 @@ section {
   transform: translateY(-3px);
 }
 
-/* ====== REVEAL ANIMATIONS ====== */
+/* reveal animations */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -1535,7 +1529,7 @@ section {
   transform: translateY(0);
 }
 
-/* ====== FADE IN ANIMATIONS ====== */
+/* keyframes */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -1546,7 +1540,7 @@ section {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ====== RESPONSIVE ====== */
+/* responsive */
 @media (max-width: 1024px) {
   .about-grid {
     grid-template-columns: 1fr;

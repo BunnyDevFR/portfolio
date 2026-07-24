@@ -1,6 +1,4 @@
-
-
-// ====== AURORA BACKGROUND (throttled) ======
+// Aurora background - runs a canvas animation
 function startAurora() {
   const canvas = document.getElementById('auroraCanvas');
   if (!canvas) return;
@@ -19,7 +17,6 @@ function startAurora() {
   function drawAurora(t) {
     ctx.clearRect(0, 0, w, h);
 
-    // Two main bands
     for (let b = 0; b < 2; b++) {
       const speed = 0.12 + b * 0.04;
       const height = 0.15 + b * 0.05;
@@ -45,7 +42,7 @@ function startAurora() {
   function animate() {
     time += 0.016;
     frameCount++;
-    // Only draw every other frame = 30fps, visually identical for slow aurora
+    // skip every other frame for performance
     if (frameCount % 2 === 0) drawAurora(time);
     requestAnimationFrame(animate);
   }
@@ -53,7 +50,7 @@ function startAurora() {
 }
 startAurora();
 
-// ====== THROTTLED PARALLAX (combined) ======
+// parallax on mouse move
 const depthElements = document.querySelectorAll('.bg-depth');
 let parallaxRaf = null;
 
@@ -64,13 +61,11 @@ document.addEventListener('mousemove', (e) => {
     const x = (e.clientX / window.innerWidth - 0.5) * 2;
     const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
-    // Depth elements
     depthElements.forEach((el, i) => {
       const factor = (i + 1) * 3;
       el.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
     });
 
-    // Hero blobs
     document.querySelectorAll('.hero-blob').forEach((blob, i) => {
       const factor = (i + 1) * 0.5;
       blob.style.transform = `translate(${x * 10 * factor}px, ${y * 10 * factor}px)`;
@@ -78,14 +73,13 @@ document.addEventListener('mousemove', (e) => {
   });
 });
 
-// ====== LOADING SCREEN ======
+// loading screen
 const loadingScreen = document.getElementById('loadingScreen');
 const loadingBar = document.getElementById('loadingBar');
 const skipBtn = document.getElementById('skipIntro');
 let loadingProgress = 0;
 let loadingComplete = false;
 
-// Particle canvas for loading screen
 const particleCanvas = document.getElementById('particleCanvas');
 const pCtx = particleCanvas.getContext('2d');
 let particleW, particleH;
@@ -129,7 +123,7 @@ for (let i = 0; i < 80; i++) particles.push(new Particle());
 function animateParticles() {
   pCtx.clearRect(0, 0, particleW, particleH);
   particles.forEach(p => { p.update(); p.draw(); });
-  // Draw connections
+  // draw connections between close particles
   for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const dx = particles[i].x - particles[j].x;
@@ -149,7 +143,7 @@ function animateParticles() {
 }
 animateParticles();
 
-// Loading progress simulation
+// simulate loading progress
 function simulateLoading() {
   const interval = setInterval(() => {
     loadingProgress += Math.random() * 6 + 2;
@@ -157,7 +151,6 @@ function simulateLoading() {
       loadingProgress = 100;
       clearInterval(interval);
       loadingComplete = true;
-      // Start converging particles to bunny shape
       convergeToBunny();
       setTimeout(hideLoading, 800);
     }
@@ -166,29 +159,27 @@ function simulateLoading() {
 }
 simulateLoading();
 
-// Bunny silhouette control points (normalized 0-1)
+// bunny shape points for particle convergence
 const bunnyPoints = (() => {
   const pts = [];
-  // Generate points that form a bunny head shape
   for (let i = 0; i < 200; i++) {
     const angle = Math.random() * Math.PI * 2;
     const r = 0.3 + Math.random() * 0.3;
     const baseX = 0.5 + Math.cos(angle) * r;
     const baseY = 0.5 + Math.sin(angle) * r * 0.9;
-    // Adjust to form bunny shape: ears on top
     let x = baseX;
     let y = baseY;
-    // Left ear
+    // left ear
     if (Math.random() < 0.15) {
       x = 0.4 + (Math.random() - 0.5) * 0.08;
       y = 0.15 + Math.random() * 0.2;
     }
-    // Right ear
+    // right ear
     else if (Math.random() < 0.15) {
       x = 0.6 + (Math.random() - 0.5) * 0.08;
       y = 0.15 + Math.random() * 0.2;
     }
-    // Face center
+    // face center
     else if (Math.random() < 0.3) {
       x = 0.5 + (Math.random() - 0.5) * 0.2;
       y = 0.5 + (Math.random() - 0.5) * 0.2;
@@ -202,7 +193,6 @@ let converging = false;
 
 function convergeToBunny() {
   converging = true;
-  // Assign each particle a target bunny point
   particles.forEach((p, i) => {
     const target = bunnyPoints[i % bunnyPoints.length];
     p.targetX = target.x;
@@ -212,7 +202,7 @@ function convergeToBunny() {
   });
 }
 
-// Override particle update for convergence
+// override particle update during convergence
 const _origParticleUpdate = Particle.prototype.update;
 Particle.prototype.update = function() {
   if (converging && this.targetX != null) {
@@ -248,7 +238,7 @@ skipBtn.addEventListener('click', () => {
   }
 });
 
-// Fallback: hide on load complete
+// fallback auto-hide after 4s
 let loadTimer = setTimeout(() => {
   if (!loadingComplete) {
     loadingProgress = 100;
@@ -259,7 +249,7 @@ let loadTimer = setTimeout(() => {
   }
 }, 4000);
 
-// ====== HERO PARTICLE CANVAS ======
+// hero particle canvas (mouse interactive)
 function startHeroParticles() {
   const heroCanvas = document.getElementById('heroCanvas');
   if (!heroCanvas) return;
@@ -297,7 +287,6 @@ function startHeroParticles() {
     update() {
       this.x += this.speedX;
       this.y += this.speedY;
-      // Mouse interaction
       const dx = mouse.x - this.x;
       const dy = mouse.y - this.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
@@ -326,7 +315,7 @@ function startHeroParticles() {
   animate();
 }
 
-// ====== TYPING EFFECT ======
+// typing effect
 const typingElement = document.getElementById('typingText');
 let typingStarted = false;
 
@@ -367,14 +356,14 @@ function startTypingEffect() {
   typeEffect();
 }
 
-// Check loading state and start typing accordingly
+// start typing if loading screen already hidden
 if (!loadingScreen.classList.contains('hidden')) {
-  // Will be started by hideLoading
+  // will be started by hideLoading
 } else {
   setTimeout(startTypingEffect, 500);
 }
 
-// ====== MAGNETIC BUTTONS ======
+// magnetic buttons effect
 document.querySelectorAll('.magnetic-btn').forEach(btn => {
   btn.addEventListener('mousemove', (e) => {
     const rect = btn.getBoundingClientRect();
@@ -388,7 +377,7 @@ document.querySelectorAll('.magnetic-btn').forEach(btn => {
   });
 });
 
-// ====== SCROLL PROGRESS ======
+// scroll progress bar
 const scrollProgress = document.getElementById('scrollProgress');
 window.addEventListener('scroll', () => {
   const scrollTop = window.scrollY;
@@ -397,7 +386,7 @@ window.addEventListener('scroll', () => {
   scrollProgress.style.width = progress + '%';
 });
 
-// ====== NAVBAR ======
+// navbar behavior
 const navbar = document.getElementById('navbar');
 const mobileToggle = document.getElementById('mobileToggle');
 const navLinks = document.getElementById('navLinks');
@@ -409,7 +398,7 @@ window.addEventListener('scroll', () => {
     navbar.classList.remove('scrolled');
   }
 
-  // Active nav link
+  // highlight active section
   const sections = document.querySelectorAll('section[id]');
   let current = '';
   sections.forEach(section => {
@@ -426,7 +415,7 @@ mobileToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
 
-// Close mobile nav on link click
+// close mobile nav on link click
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', () => {
     mobileToggle.classList.remove('active');
@@ -434,7 +423,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
   });
 });
 
-// ====== SCROLL REVEAL ======
+// scroll reveal with IntersectionObserver
 const revealElements = document.querySelectorAll('.reveal');
 
 const revealObserver = new IntersectionObserver((entries) => {
@@ -447,7 +436,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 revealElements.forEach(el => revealObserver.observe(el));
 
-// ====== TIMELINE ANIMATION ======
+// timeline items
 const timelineItems = document.querySelectorAll('.timeline-item');
 const timelineObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -459,7 +448,7 @@ const timelineObserver = new IntersectionObserver((entries) => {
 
 timelineItems.forEach(item => timelineObserver.observe(item));
 
-// ====== STAT COUNTERS ======
+// stat counters
 const statNumbers = document.querySelectorAll('.stat-number');
 
 const statObserver = new IntersectionObserver((entries) => {
@@ -491,7 +480,7 @@ function animateCounter(element, target) {
   }, 20);
 }
 
-// ====== PROJECT FILTERING & SEARCH ======
+// project filtering + search
 const filterBtns = document.querySelectorAll('.filter-btn');
 const galleryItems = document.querySelectorAll('.gallery-item');
 const searchInput = document.getElementById('projectSearch');
@@ -527,15 +516,14 @@ if (searchInput) {
   searchInput.addEventListener('input', filterProjects);
 }
 
-// ====== CONTACT FORM — DISCORD WEBHOOK WITH RATE LIMITING ======
+// contact form -> discord webhook
 const contactForm = document.getElementById('contactForm');
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1530187373080481873/aAdTpXpSgZ4kPmU1YMSPvKe4ztCRvWVR48_3DaGBW2y_jlbeRGW-RJ3l-xCJ8FQEKtlb';
 
-// Rate limiting config
 const RATE_LIMIT = {
-  COOLDOWN_MS: 30000,       // 30 seconds between submissions
-  MAX_SUBMISSIONS: 3,       // max submissions allowed
-  WINDOW_MS: 3600000        // within 1 hour rolling window
+  COOLDOWN_MS: 30000,
+  MAX_SUBMISSIONS: 3,
+  WINDOW_MS: 3600000
 };
 
 function getRateLimitData() {
@@ -550,23 +538,20 @@ function getRateLimitData() {
 function saveRateLimitData(data) {
   try {
     localStorage.setItem('portfolio_ratelimit', JSON.stringify(data));
-  } catch { /* localStorage unavailable */ }
+  } catch { /* storage might be blocked */ }
 }
 
 function checkRateLimit() {
   const now = Date.now();
   const data = getRateLimitData();
 
-  // Check cooldown (per-submission cooldown)
   if (data.cooldownUntil > now) {
     const remaining = Math.ceil((data.cooldownUntil - now) / 1000);
     return { allowed: false, reason: 'cooldown', remaining };
   }
 
-  // Clean old timestamps outside the window
   data.timestamps = data.timestamps.filter(ts => now - ts < RATE_LIMIT.WINDOW_MS);
 
-  // Check max submissions within window
   if (data.timestamps.length >= RATE_LIMIT.MAX_SUBMISSIONS) {
     const oldest = data.timestamps[0];
     const resetIn = Math.ceil((oldest + RATE_LIMIT.WINDOW_MS - now) / 1000);
@@ -599,7 +584,6 @@ if (contactForm) {
     const btn = contactForm.querySelector('button[type="submit"]');
     const originalText = btn.innerHTML;
 
-    // --- Rate limit check ---
     const check = checkRateLimit();
     if (!check.allowed) {
       if (check.reason === 'cooldown') {
@@ -654,7 +638,6 @@ if (contactForm) {
         
         if (!res.ok) throw new Error('Webhook failed');
         
-        // Record successful submission
         recordSubmission();
         
         btn.innerHTML = '<span>Message Sent!</span>';
@@ -682,13 +665,13 @@ if (contactForm) {
   });
 }
 
-// ====== BACK TO TOP ======
+// back to top
 const backToTop = document.getElementById('backToTop');
 backToTop.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ====== SMOOTH SECTION LINKS (fallback for browsers without scroll-behavior) ======
+// smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
     const href = this.getAttribute('href');
@@ -701,11 +684,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ====== LAZY INITIALIZATION ======
-// If loading screen is already hidden (skip clicked fast), start hero particles and typing
+// start particles & typing if loading was already skipped
 if (loadingScreen.classList.contains('hidden')) {
   startHeroParticles();
   startTypingEffect();
 }
-
-console.log('🐇 Portfolio loaded — crafted with care.');
