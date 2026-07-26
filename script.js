@@ -323,7 +323,7 @@ function startTypingEffect() {
   if (!typingElement || typingStarted) return;
   typingStarted = true;
   
-  const phrases = ['web apps, and games.', 'beautiful interfaces.', 'digital experiences.', 'the future.'];
+  const phrases = ['web apps, and games.', 'interactive tools.', 'things people use.'];
   let phraseIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
